@@ -1,5 +1,13 @@
 import numpy as np
 
+def substituicao_inversa(A, b):
+    m = len(A)
+    x = np.zeros(m)
+    for i in range(m - 1, -1, -1):
+        x[i] = (b[i] - np.dot(A[i][i + 1:], x[i + 1:])) / A[i][i]
+
+    return x
+
 def eliminacao_gaussiana(A, b):
     m = len(A)
     for i in range(m):
@@ -24,11 +32,7 @@ def eliminacao_gaussiana(A, b):
             A[j] -= fator * A[i]
             b[j] -= fator * b[i]
 
-    x = np.zeros(m)
-    for i in range(m - 1, -1, -1):
-        x[i] = (b[i] - np.dot(A[i][i + 1:], x[i + 1:])) / A[i][i]
-
-    return x
+    return substituicao_inversa(A, b)
 
 def decomposicao_PtLU(A):
     U = A.copy()
@@ -67,21 +71,21 @@ print(eliminacao_gaussiana(A3, b3))
 # ----------------------------------- DECOMPOSIÇÃO PtLU -----------------------------------
 
 P1, L1, U1 = decomposicao_PtLU(A1)
-P1b1 = np.matmul(P1, b1)
-Y1 = eliminacao_gaussiana(L1, P1b1)
+P1b1 = np.dot(P1, b1)
+Y1 = substituicao_inversa(L1, P1b1)
 print('P1:', P1)
-print('sol 1:', eliminacao_gaussiana(U1, Y1))
+print('sol 1:', substituicao_inversa(U1, Y1))
 
 P2, L2, U2 = decomposicao_PtLU(A2)
 P2b2 = np.matmul(P2, b2)
-Y2 = eliminacao_gaussiana(L2, P2b2)
+Y2 = substituicao_inversa(L2, P2b2)
 print('P2:', P2)
-print('sol 2:', eliminacao_gaussiana(U2, Y2))
+print('sol 2:', substituicao_inversa(U2, Y2))
 
 P3, L3, U3 = decomposicao_PtLU(A3)
 P3b3 = np.matmul(P3, b3)
-Y3 = eliminacao_gaussiana(L3, P3b3)
+Y3 = substituicao_inversa(L3, P3b3)
 print('P3:', P3)
-print('sol 3:', eliminacao_gaussiana(U3, Y3))
+print('sol 3:', substituicao_inversa(U3, Y3))
 
 # ----------------------------------- CHOLESKY -----------------------------------
