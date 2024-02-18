@@ -1,5 +1,6 @@
 import numpy as np
 from time import time
+from matplotlib import pyplot as plt
 
 def substituicao_inversa(A, b):
     m = len(A)
@@ -63,6 +64,11 @@ def positiva_definida(n):
 
 valores_de_n = [10, 100, 500, 1000]
 
+gauss_a, t_gauss_a = [], []
+ptlu_a, t_ptlu_a = [], []
+gauss_b, t_gauss_b = [], []
+ptlu_b, t_ptlu_b = [], []
+
 # 10 matrizes e 10 vetores
 print('\n----- Letra a) 10 matrizes e 10 vetores -----\n')
 for n in valores_de_n:
@@ -78,6 +84,8 @@ for n in valores_de_n:
     fim = time()
 
     print(f'Eliminação Gaussiana p/ n = {n}: {fim - inicio}s')
+    gauss_a.append(n)
+    t_gauss_a.append(fim - inicio)
 
     inicio = time()
     for i in range(10):
@@ -94,6 +102,8 @@ for n in valores_de_n:
     fim = time()
 
     print(f'Decomposição PtLU p/ n = {n}: {fim - inicio}s')
+    ptlu_a.append(n)
+    t_ptlu_a.append(fim - inicio)
 
 # 1 matriz e 10 vetores
 print('\n----- Letra b) 1 matriz e 10 vetores -----\n')
@@ -111,6 +121,8 @@ for n in valores_de_n:
     fim = time()
 
     print(f'Eliminação Gaussiana p/ n = {n}: {fim - inicio}s')
+    gauss_b.append(n)
+    t_gauss_b.append(fim - inicio)
 
     P, L, U = None, None, None
     inicio = time()
@@ -129,3 +141,24 @@ for n in valores_de_n:
     fim = time()
 
     print(f'Decomposição PtLU p/ n = {n}: {fim - inicio}s')
+    ptlu_b.append(n)
+    t_ptlu_b.append(fim - inicio)
+
+figure, axis = plt.subplots(2, 1)
+axis[0].plot(gauss_a, t_gauss_a, label='Eliminação Gaussiana (10 matrizes e 10 vetores)', marker='o')
+axis[0].plot(ptlu_a, t_ptlu_a, label='Decomposição PtLU (10 matrizes e 10 vetores)', marker='o')
+axis[0].set_title('10 matrizes e 10 vetores')
+axis[0].set_xlabel('n')
+axis[0].set_ylabel('Tempo (s)')
+axis[0].legend(['Eliminação Gaussiana', 'Decomposição PtLU'])
+axis[0].grid(True)
+
+axis[1].plot(gauss_b, t_gauss_b, label='Eliminação Gaussiana (1 matriz e 10 vetores)', marker='o')
+axis[1].plot(ptlu_b, t_ptlu_b, label='Decomposição PtLU (1 matriz e 10 vetores)', marker='o')
+axis[1].set_title('1 matriz e 10 vetores')
+axis[1].set_xlabel('n')
+axis[1].set_ylabel('Tempo (s)')
+axis[1].legend(['Eliminação Gaussiana', 'Decomposição PtLU'])
+axis[1].grid(True)
+
+plt.show()
